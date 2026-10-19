@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<h1>Catálogo</h1>
+<p class="subtitulo">Vinilos y CD de todos los estilos.</p>
+
+{# Formulario de búsqueda: se envía por GET a la misma ruta #}
+<form method="GET" action="{{ url_for('index') }}" class="filtros">
+    <input type="text" class="form-control" name="q" value="{{ q }}"
+           placeholder="Buscar artista o título">
+
+    <select name="formato" class="form-control">
+        <option value="">Todos los formatos</option>
+        <option value="Vinilo" {% if formato == 'Vinilo' %}selected{% endif %}>Vinilo</option>
+        <option value="CD" {% if formato == 'CD' %}selected{% endif %}>CD</option>
+    </select>
+
+    <select name="genero" class="form-control">
+        <option value="">Todos los géneros</option>
+        {% for g in generos %}
+        <option value="{{ g.genero }}" {% if genero == g.genero %}selected{% endif %}>{{ g.genero }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn">Buscar</button>
+</form>
+
+<div class="grid">
+    {% for d in discos %}
+    <div class="card">
+        {% if d.portada_url %}
+        <div class="portada con-imagen">
+            <img src="{{ d.portada_url }}" alt="Portada de {{ d.titulo }}"
+                 loading="lazy" referrerpolicy="no-referrer">
+        </div>
+        {% else %}
+        <div class="portada {{ 'vinilo' if d.formato == 'Vinilo' else 'cd' }}"
+             style="--hue: {{ (d.id * 47) % 360 }}"></div>
+        {% endif %}
+        <h3>{{ d.titulo }}</h3>
+        <p class="artista">{{ d.artista }} · {{ d.anio }}</p>
+        <p>
+            <span class="etiqueta formato">{{ d.formato }}</span>
+            <span class="etiqueta">{{ d.genero }}</span>
+        </p>
+        <p class="precio">{{ '%.2f'|format(d.precio) }} €</p>
+        {% if d.stock > 0 %}
+        <a class="btn" href="{{ url_for('disco', id=d.id) }}">Ver disco</a>
+        {% else %}
+        <p><strong>Agotado</strong></p>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>No se ha encontrado ningún disco con esos criterios.</p>
+    {% endfor %}
+</div>
+{% endblock %}

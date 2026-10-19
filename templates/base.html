@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Groove Records{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <a class="marca" href="{{ url_for('index') }}">Groove <span>Records</span></a>
+        <a href="{{ url_for('index') }}">Catálogo</a>
+        <a href="{{ url_for('contacto') }}">Contacto</a>
+        <a href="{{ url_for('carrito') }}">Carrito{% if carrito_items %} <span class="badge">{{ carrito_items }}</span>{% endif %}</a>
+        {% if session.usuario_id %}
+        {% if session.es_admin %}<a href="{{ url_for('disco_nuevo_form') }}">+ Añadir disco</a>{% endif %}
+        <a href="{{ url_for('mis_compras') }}">Mis pedidos</a>
+        <span style="color:#fff">Hola, {{ session.usuario_nombre }}</span>
+        <a href="{{ url_for('logout') }}">Salir</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Iniciar sesión</a>
+        <a href="{{ url_for('registro_form') }}">Registrarse</a>
+        {% endif %}
+    </nav>
+
+    <main>
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensaje in mensajes %}
+            <div class="flash {{ categoria }}">{{ mensaje }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block contenido %}{% endblock %}
+    </main>
+</body>
+</html>

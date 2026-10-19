@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ 'Editar' if disco and disco.id else 'Añadir' }} disco - Groove Records{% endblock %}
+
+{% block contenido %}
+{% set editando = disco and disco.id %}
+<div class="form-card">
+    <h1>{{ 'Editar disco' if editando else 'Añadir disco al catálogo' }}</h1>
+
+    <form method="POST"
+          action="{{ url_for('disco_editar', id=disco.id) if editando else url_for('disco_nuevo') }}">
+        <div class="form-group">
+            <label for="artista">Artista:</label>
+            <input type="text" class="form-control" id="artista" name="artista"
+                   value="{{ disco.artista if disco }}" maxlength="100" required>
+        </div>
+        <div class="form-group">
+            <label for="titulo">Título del álbum:</label>
+            <input type="text" class="form-control" id="titulo" name="titulo"
+                   value="{{ disco.titulo if disco }}" maxlength="150" required>
+        </div>
+        <div class="form-group">
+            <label for="genero">Género:</label>
+            <input type="text" class="form-control" id="genero" name="genero"
+                   value="{{ disco.genero if disco }}" maxlength="50" required>
+        </div>
+        <div class="form-group">
+            <label for="anio">Año:</label>
+            <input type="number" class="form-control" id="anio" name="anio"
+                   value="{{ disco.anio if disco }}" min="1900" max="2100" required>
+        </div>
+        <div class="form-group">
+            <label for="formato">Formato:</label>
+            <select class="form-control" id="formato" name="formato" required>
+                {% for f in formatos %}
+                <option value="{{ f }}" {{ 'selected' if disco and disco.formato == f }}>{{ f }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="precio">Precio (€):</label>
+            <input type="number" class="form-control" id="precio" name="precio"
+                   value="{{ disco.precio if disco }}" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="stock">Stock:</label>
+            <input type="number" class="form-control" id="stock" name="stock"
+                   value="{{ disco.stock if disco else 1 }}" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea class="form-control" id="descripcion" name="descripcion"
+                      rows="4">{{ disco.descripcion if disco and disco.descripcion }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="portada_url">URL de la portada (opcional):</label>
+            <input type="url" class="form-control" id="portada_url" name="portada_url"
+                   value="{{ disco.portada_url if disco and disco.portada_url }}"
+                   placeholder="Déjalo vacío para buscarla automáticamente">
+        </div>
+        <button type="submit" class="btn">{{ 'Guardar cambios' if editando else 'Añadir disco' }}</button>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">← Volver al catálogo</a></p>
+</div>
+{% endblock %}

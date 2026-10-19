@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Registro - Groove Records{% endblock %}
+
+{% block contenido %}
+<div class="form-card">
+    <h1>Crear cuenta</h1>
+    <p class="subtitulo">Únete a Groove Records y recibe avisos de tus pedidos.</p>
+    <form method="POST" action="{{ url_for('registro') }}">
+        <div class="form-group">
+            <label for="nombre">Nombre completo:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre"
+                   required maxlength="50">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo electrónico:</label>
+            <input type="email" class="form-control" id="email" name="email"
+                   required maxlength="100">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   required minlength="6">
+        </div>
+
+        <button type="submit" class="btn">Registrarme</button>
+    </form>
+</div>
+{% endblock %}

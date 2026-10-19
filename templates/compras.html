@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Mis pedidos - Groove Records{% endblock %}
+
+{% block contenido %}
+<h1>Mis pedidos</h1>
+
+{% for p in pedidos %}
+<h2 class="pedido-titulo">Pedido nº {{ p.id }}
+    <small>{{ p.fecha.strftime('%d/%m/%Y %H:%M') }}</small></h2>
+<table>
+    <tr>
+        <th>Disco</th>
+        <th>Formato</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Subtotal</th>
+    </tr>
+    {% for l in p.lineas %}
+    <tr>
+        <td>{{ l.artista }} - {{ l.titulo }}</td>
+        <td>{{ l.formato }}</td>
+        <td>{{ l.cantidad }}</td>
+        <td>{{ '%.2f'|format(l.precio_unitario) }} €</td>
+        <td>{{ '%.2f'|format(l.subtotal) }} €</td>
+    </tr>
+    {% endfor %}
+    <tr class="fila-total">
+        <td colspan="4" style="text-align:right"><strong>Total del pedido</strong></td>
+        <td><strong>{{ '%.2f'|format(p.total) }} €</strong></td>
+    </tr>
+</table>
+{% else %}
+<p>Todavía no has hecho ningún pedido. <a href="{{ url_for('index') }}">Explora el catálogo</a>.</p>
+{% endfor %}
+{% endblock %}

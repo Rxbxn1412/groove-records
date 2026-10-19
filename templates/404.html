@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Página no encontrada - Groove Records{% endblock %}
+
+{% block contenido %}
+<div class="form-card">
+    <h1>Error 404</h1>
+    <p>La página que buscas no existe.</p>
+    <a class="btn" href="{{ url_for('index') }}">Volver al inicio</a>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block titulo %}{{ disco.titulo }} - Groove Records{% endblock %}
+
+{% block contenido %}
+<div class="form-card">
+    {% if disco.portada_url %}
+    <div class="portada grande con-imagen">
+        <img src="{{ disco.portada_url }}" alt="Portada de {{ disco.titulo }}"
+             referrerpolicy="no-referrer">
+    </div>
+    {% else %}
+    <div class="portada grande {{ 'vinilo' if disco.formato == 'Vinilo' else 'cd' }}"
+         style="--hue: {{ (disco.id * 47) % 360 }}"></div>
+    {% endif %}
+
+    <h1>{{ disco.titulo }}</h1>
+    <p class="subtitulo">{{ disco.artista }} · {{ disco.anio }}</p>
+    <p>
+        <span class="etiqueta formato">{{ disco.formato }}</span>
+        <span class="etiqueta">{{ disco.genero }}</span>
+    </p>
+    <p>{{ disco.descripcion }}</p>
+    <p class="precio">{{ '%.2f'|format(disco.precio) }} €</p>
+    <p>Unidades disponibles: {{ disco.stock }}</p>
+
+    {% if disco.stock > 0 %}
+    <form method="POST" action="{{ url_for('carrito_anadir', id=disco.id) }}">
+        <div class="form-group">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" class="form-control" id="cantidad" name="cantidad"
+                   value="1" min="1" max="{{ disco.stock }}" required>
+        </div>
+        <button type="submit" class="btn">Añadir al carrito</button>
+        <a class="btn-sec" href="{{ url_for('carrito') }}">Ver carrito</a>
+    </form>
+    {% else %}
+    <p><strong>Disco agotado.</strong></p>
+    {% endif %}
+    {% if session.es_admin %}
+    <p><a href="{{ url_for('disco_editar_form', id=disco.id) }}" class="btn">Editar disco</a></p>
+    {% endif %}
+
+    <p><a href="{{ url_for('index') }}">← Volver al catálogo</a></p>
+</div>
+{% endblock %}
